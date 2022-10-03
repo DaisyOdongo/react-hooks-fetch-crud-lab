@@ -10,9 +10,7 @@ function QuestionItem({ question }) {
     </option>
   ));
 
-  function handleChange(event){
-    const key = event.target.id;
-
+function handleChange(id) {
     setUpdatedIndex(correctIndex)
     fetch(`http://localhost:4000/questions/${id}`, {
       method:"PATCH", 
@@ -25,6 +23,7 @@ function QuestionItem({ question }) {
     .then(data =>{
       console.log(data)
     })
+    updatedIndex()
   }
   const handleDelete =()=>{
     console.log(id)
