@@ -1,42 +1,43 @@
 import React, {useState} from "react";
 
-function QuestionItem({ question }) {
+function QuestionItem({ question, onDeleteQuestion }) {
   const { id, prompt, answers, correctIndex } = question;
   const [updatedIndex, setUpdatedIndex] = useState(correctIndex)
 
-  const options = answers.map((answer, index) => (
+  console.log(question)
+  const options = answers?.map((answer, index) => (
     <option key={index} value={index}>
       {answer}
     </option>
   ));
 
-function handleChange(id) {
-    setUpdatedIndex(correctIndex)
+  function handleOnChange(event){
+    let index = event.target.id
+    setUpdatedIndex(index)
     fetch(`http://localhost:4000/questions/${id}`, {
       method:"PATCH", 
       headers:{
         "Content-Type":"application/json"
       }, 
-      body:JSON.stringify({"correctIndex": correctIndex})
+      body:JSON.stringify({"correctIndex": index})
     })
-    .then(res => res.json())
-    .then(data =>{
-      console.log(data)
-    })
-    updatedIndex()
+    .then((res) => res.json())
+    .then((index) => setUpdatedIndex(index))
   }
-  const handleDelete =()=>{
-    console.log(id)
-  }
-  return (
+
+
+
+
+
+ return (
     <li>
       <h4>Question {id}</h4>
       <h5>Prompt: {prompt}</h5>
       <label>
         Correct Answer:
-        <select defaultValue={correctIndex} onChange={handleChange}>{options}</select>
+        <select defaultValue={updatedIndex} onChange={handleOnChange}>{options}</select>
       </label>
-      <button onClick={handleDelete}>Delete Question</button>
+      <button onClick={() => onDeleteQuestion(id)}>Delete Question</button>
     </li>
   );
 }

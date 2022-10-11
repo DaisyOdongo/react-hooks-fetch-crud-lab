@@ -2,36 +2,39 @@ import React, { useEffect, useState } from "react";
 import QuestionItem from "./QuestionItem";
 
 function QuestionList() {
-  const [questions, setQuestions] = useState([]);
+
+  const [questions, setQuestions] = useState([])
 
   useEffect(() => {
-    fetch(" http://localhost:4000/questions")
-    .then((res) => res.jsson())
-    .then((data) => setQuestions(data));
-  }, []);
+    fetch("http://localhost:4000/questions")
+      .then((res) => res.json())
+      .then((questions) => setQuestions(questions))
+  }, [])
 
-  function handleDelete(id){
+  function deleteQuestion(id) {
     fetch(`http://localhost:4000/questions/${id}`, {
-    method:"DELETE"
-  })
-  .then(res => res.json())
-  .then(data =>{
-    alert("Deleted!")
-     //filter 
-  const updatedList= questions.filter(question=> question.id !==id)
-  setQuestions(updatedList);
+      method: "DELETE",
+    })
+    .then((res) => res.json())
+    .then((q) => {
+      const updatedList = questions.filter((question) => question.id !== id)
+      setQuestions(updatedList)
+    })
+  }
 
-  })
-}
   return (
-    <section>
+    <div>
+      <section>
       <h1>Quiz Questions</h1>
-      <ul>{questions.map(question=>
-      <QuestionItem 
-      key={question.id} 
-      question={question}
-      onDelete={handleDelete}/>)}</ul>
+      <ul>
+      {questions.map((question) => (
+        <QuestionItem key={question.id} question={question} onDeleteQuestion={deleteQuestion}/>
+      ))}
+      </ul>
     </section>
+
+    </div>
+
   );
 }
 
